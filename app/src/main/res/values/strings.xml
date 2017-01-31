@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Sr Evento</string>
+
+    <string name="title_activity_lista_acontecimientos">ListaAcontecimientosActivity</string>
+    <string name="settings">Configuración</string>
+    <string name="acerca_de">Acerca de</string>
+
+    <string name="title_activity_configuracion">Configuracion</string>
+    <string name="title_activity_acerca_de">AcercaDe</string>
+    <string name="title_activity_anadir_acontecimiento">Añadir Acontecimiento</string>
+
+    <string name="noconnection">No hay conexión a internet</string>
+    <string name="title_activity_mostrar_acontecimiento">Mostrar Acontecimiento</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
