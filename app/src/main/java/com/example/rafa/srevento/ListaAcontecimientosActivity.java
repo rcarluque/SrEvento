@@ -3,32 +3,34 @@ package com.example.rafa.srevento;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class ListaAcontecimientosActivity extends AppCompatActivity {
 
-    private static final String ACTIVITY = "LogoActivity";
+    private static final String ACTIVITY = "ListaAcontecimientosActivity";
     private ArrayList<AcontecimientoItem> items;
-    private LinearLayout layoutPrincipal;
     private Context myContext;
 
     @Override
@@ -44,7 +46,7 @@ public class ListaAcontecimientosActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ListaAcontecimientosActivity.this, AnadirAcontecimientoActivity.class);
+                Intent intent = new Intent(ListaAcontecimientosActivity.this, BuscarAcontecimientoActivity.class);
                 startActivity(intent);
             }
         });
@@ -61,11 +63,11 @@ public class ListaAcontecimientosActivity extends AppCompatActivity {
 
     public void listaAcontecimientos(){
         TextView tv_Error = (TextView) findViewById(R.id.textViewError);
-        items = new ArrayList<AcontecimientoItem>();
+        items = new ArrayList<>();
         int id = -1;
-        String nombre = null;
-        String inicio = null;
-        String fin = null;
+        String nombre;
+        String inicio;
+        String fin;
 
         //Abrimos la base de datos en modo lectura
         // Recibe el contexto y la ruta de la base de datos
@@ -84,7 +86,7 @@ public class ListaAcontecimientosActivity extends AppCompatActivity {
         } else {
 
             // Buscamos el layout principal para eliminar el textView
-            layoutPrincipal = (LinearLayout) findViewById(R.id.content_lista_acontecimientos);
+            LinearLayout layoutPrincipal = (LinearLayout) findViewById(R.id.content_lista_acontecimientos);
             layoutPrincipal.removeView(tv_Error);
 
             while (c.moveToNext()) {
@@ -129,7 +131,7 @@ public class ListaAcontecimientosActivity extends AppCompatActivity {
                     editor.putString("id", items.get(position).getId());
                     editor.commit();
 
-                    Intent intent = new Intent(myContext, MostrarAcontecimientoActivity.class);
+                    Intent intent = new Intent(myContext, MostrarAcontecimientoScrollActivity.class);
                     myContext.startActivity(intent);
                 }
             });
@@ -171,6 +173,9 @@ public class ListaAcontecimientosActivity extends AppCompatActivity {
     protected void onRestart() {
         MyLog.d(ACTIVITY, "On restart...");
         super.onRestart();
+
+        finish();
+        startActivity(getIntent());
     }
 
     @Override
@@ -211,7 +216,7 @@ public class ListaAcontecimientosActivity extends AppCompatActivity {
 
         // action_settings es la id del elemento en el menu_main.xml
         if (id == R.id.action_settings) {
-            startActivity(new Intent(this, ConfiguracionActivity.class));
+            startActivity(new Intent(this, PreferencesActivity.class));
             return true;
         }
 

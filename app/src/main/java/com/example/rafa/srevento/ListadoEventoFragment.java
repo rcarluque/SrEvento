@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 
 public class ListadoEventoFragment extends ListFragment {
+    private static final String ACTIVITY = "ListadoEventoFragment";
     private ListView listView;
     private ArrayList<EventoItem> items;
     private EventoAdapter eventoAdapter;
@@ -29,7 +30,7 @@ public class ListadoEventoFragment extends ListFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        MyLog.d("listadoFragment", "onCreate...");
+        MyLog.d(ACTIVITY, "onCreate...");
         super.onCreate(savedInstanceState);
 
     }
@@ -38,7 +39,7 @@ public class ListadoEventoFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        MyLog.d("listadoFragment", "onCreateView...");
+        MyLog.d(ACTIVITY, "onCreateView...");
 
         View rootView = inflater.inflate(R.layout.fragment_listado_evento, container, false);
         listView = (ListView) rootView.findViewById(android.R.id.list);
@@ -57,27 +58,19 @@ public class ListadoEventoFragment extends ListFragment {
         int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
                 android.R.layout.simple_list_item_activated_1 : android.R.layout.simple_list_item_1;
 
-        // -----!! Extraemos los Datos de la BBDD y del SharedPreferences !!-----
-        AcontecimientoSQLiteHelper usdbh =
-                new AcontecimientoSQLiteHelper(getActivity(), Environment.getExternalStorageDirectory()+"/srevento.db", null, 1);
+        // Obtenemos el id de las preferencias.
+        String idAcontecimiento = Methods.getInstance().getSharedPrefs(getContext()).getString("id", "no hay id");
 
-        SQLiteDatabase db = usdbh.getReadableDatabase();
-
-        SharedPreferences prefs =
-                getActivity().getSharedPreferences("MisPreferencias",Context.MODE_PRIVATE);
-
-        String idAcontecimiento = prefs.getString("id", "no hay id");
-
-        String[] args = new String[] {idAcontecimiento};
         // la sentencia SQL
         String selectSQL = "SELECT id, nombre FROM evento WHERE id_acontecimiento=?";
+        String[] args = new String[] {idAcontecimiento};
 
         String id = null;
         String nombre = null;
-
         items = new ArrayList<EventoItem>();
 
-        Cursor c = db.rawQuery(selectSQL, args);
+        // Extraemos la BBDD en modo lectura y creamos un cursor sobre esa consulta.
+        Cursor c = Methods.getInstance().getReadBBDD(getContext()).rawQuery(selectSQL, args);
         while (c.moveToNext()) {
             id = c.getString(c.getColumnIndex("id"));
             nombre = c.getString(c.getColumnIndex("nombre"));
@@ -92,7 +85,7 @@ public class ListadoEventoFragment extends ListFragment {
 
     @Override
     public void onStart(){
-        MyLog.d("listadoFragment", "onStart...");
+        MyLog.d(ACTIVITY, "onStart...");
         super.onStart();
 
         // Cuando se encuentre en un diseño de dos paneles, la vista pasará a modo de Lista
@@ -103,7 +96,7 @@ public class ListadoEventoFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        MyLog.d("listadoFragment", "onListItemClick...");
+        MyLog.d(ACTIVITY, "onListItemClick...");
         if(mListener != null){
             mListener.onFragmentInteraction(position, items.get(position));
         }

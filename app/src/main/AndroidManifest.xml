@@ -7,6 +7,13 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <!--
+     The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+     Google Maps Android API v2, but you must specify either coarse or fine
+     location permissions for the 'MyLocation' functionality.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,6 +22,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LogoActivity"
+            android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,14 +35,6 @@
             android:label="@string/title_activity_lista_acontecimientos"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ConfiguracionActivity"
-            android:label="@string/title_activity_configuracion"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ListaAcontecimientosActivity" />
-        </activity>
-        <activity
             android:name=".AcercaDeActivity"
             android:label="@string/title_activity_acerca_de"
             android:theme="@style/AppTheme.NoActionBar">
@@ -43,22 +43,41 @@
                 android:value=".ListaAcontecimientosActivity" />
         </activity>
         <activity
-            android:name=".AnadirAcontecimientoActivity"
+            android:name=".BuscarAcontecimientoActivity"
             android:label="@string/title_activity_anadir_acontecimiento"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ListaAcontecimientosActivity" />
         </activity>
+        <activity android:name=".EventosActivity" />
         <activity
-            android:name=".MostrarAcontecimientoActivity"
-            android:label="@string/title_activity_mostrar_acontecimiento"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ListaAcontecimientosActivity" />
-        </activity>
-        <activity android:name=".EventosActivity"></activity>
+            android:name=".PreferencesActivity"
+            android:label="@string/title_activity_preferences" />
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".MapsActivity"
+            android:label="@string/title_activity_maps"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NavegadorActivity"
+            android:label="@string/title_activity_navigator"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".MostrarAcontecimientoScrollActivity"
+            android:label="@string/title_activity_mostar_aconticimiento_scroll"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

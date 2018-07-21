@@ -2,7 +2,6 @@ package com.example.rafa.srevento;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -20,16 +19,16 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-public class AnadirAcontecimientoActivity extends AppCompatActivity {
+public class BuscarAcontecimientoActivity extends AppCompatActivity {
 
-    private static final String ACTIVITY = "AnadirAcontecimientoActivity";
+    private static final String ACTIVITY = "BuscarAcontecimientoActivity";
     public static Context myContext;
     final private int REQUEST_CODE_INTERNET = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_anadir_acontecimiento);
+        setContentView(R.layout.activity_buscar_acontecimiento);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -50,40 +49,37 @@ public class AnadirAcontecimientoActivity extends AppCompatActivity {
 
     private void abreLink(){
         // con el siguiente código hacemos que al pulsar el botón de añadir, cambie a otra actividad
-        Button button_ingresar = (Button) findViewById(R.id.button_descargar_anadiracontecimiento);
-        button_ingresar.setOnClickListener(new View.OnClickListener() {
+        Button button_buscar = (Button) findViewById(R.id.button_buscar_acontecimiento);
+        button_buscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (isOnline()== true) {
-                    // con el siguiente código vamos a pasarle a la nueva actividad, los parametros introducidos en el editText
-                    EditText editText_id = (EditText) findViewById(R.id.editText_id_anadiracontecimiento);
+                if (isOnline() == true) {
+                    // Obtenemos el texto de busqueda
+                    EditText editText_nombre = (EditText) findViewById(R.id.et_texto_buscar_acontecimiento);
+                    String textoBuscar = editText_nombre.getText().toString();
 
-                    // código con el cual ocultaremos el teclado al pulsar el botón
+                    // Código con el cual ocultaremos el teclado al pulsar el botón
                     InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(editText_id.getWindowToken(), 0);
+                    inputMethodManager.hideSoftInputFromWindow(editText_nombre.getWindowToken(), 0);
 
-                    String idBuscar = editText_id.getText().toString();
-                    ProgressBar pb = (ProgressBar) findViewById(R.id.progressBar1);
-
-                    if (idBuscar.length() == 0) {
-                        Snackbar.make(v, "No se puede buscar un campo vacio", Snackbar.LENGTH_LONG)
+                    if (textoBuscar.length() == 0) {
+                        Snackbar.make(v, R.string.campo_vacio, Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
                     } else {
-
                         int permissionCheck = ContextCompat.checkSelfPermission(myContext, Manifest.permission.INTERNET);
                         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
 
-                            new NuevoAcontecimientoAsyncTask(idBuscar, myContext, pb).execute();
+                            new BuscaAcontecimientoAsyncTask(textoBuscar, myContext).execute();
                         } else {
                             if (Build.VERSION.SDK_INT >= 23) {
                                 // Explicar permiso
-                                if (ActivityCompat.shouldShowRequestPermissionRationale(AnadirAcontecimientoActivity.this, Manifest.permission.INTERNET)) {
+                                if (ActivityCompat.shouldShowRequestPermissionRationale(BuscarAcontecimientoActivity.this, Manifest.permission.INTERNET)) {
                                     Toast.makeText(myContext, "Se necesita permiso de conexión a internet",
                                             Toast.LENGTH_SHORT).show();
                                 }
                                 // Solicitar el permiso
-                                ActivityCompat.requestPermissions(AnadirAcontecimientoActivity.this, new String[]{Manifest.permission.INTERNET}, REQUEST_CODE_INTERNET);
+                                ActivityCompat.requestPermissions(BuscarAcontecimientoActivity.this, new String[]{Manifest.permission.INTERNET}, REQUEST_CODE_INTERNET);
                             } else {
                                 Snackbar.make(v, "Mensaje por defecto", Snackbar.LENGTH_LONG)
                                         .setAction("Action", null).show();
@@ -105,7 +101,7 @@ public class AnadirAcontecimientoActivity extends AppCompatActivity {
         NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
 
         if(netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()){
-            Toast.makeText(myContext, getString(R.string.noconnection), Toast.LENGTH_LONG).show();
+            Toast.makeText(myContext, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
             return false;
         }
         return true;

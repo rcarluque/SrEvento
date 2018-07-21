@@ -22,6 +22,7 @@ import android.widget.TextView;
  * A simple {@link Fragment} subclass.
  */
 public class MostrarEventoFragment extends Fragment {
+    private static final String ACTIVITY = "MostrarEventoFragment";
     int mCurrentPosition = -1;
     private LinearLayout layoutPrincipal;
     String id;
@@ -33,7 +34,7 @@ public class MostrarEventoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        MyLog.d("MostrarEventoFragment", "onCreateView...");
+        MyLog.d(ACTIVITY, "onCreateView...");
 
         // Si la actividad se ha recreado (por ejemplo desde la rotación de la pantalla), se restaura
         // la selección de artículo anterior establecida por onSaveInstanceState ().
@@ -49,7 +50,7 @@ public class MostrarEventoFragment extends Fragment {
 
     @Override
     public void onStart() {
-        MyLog.d("MostrarEventoFragment", "onStart...");
+        MyLog.d(ACTIVITY, "onStart...");
         super.onStart();
 
         // Durante el inicio, comprobamos si hay argumentos pasados ​​al fragmento.
@@ -66,7 +67,7 @@ public class MostrarEventoFragment extends Fragment {
     }
 
     public void updateView(int position, String id){
-        MyLog.d("MostrarEventoFragment", "updateView...");
+        MyLog.d(ACTIVITY, "updateView...");
 
         crearLayout(id);
     }
@@ -83,21 +84,13 @@ public class MostrarEventoFragment extends Fragment {
         String latitud = null;
         String longitud = null;
 
-        //Abrimos la base de datos en modo lectura
-        // Recibe el contexto y la ruta de la base de datos
-        AcontecimientoSQLiteHelper usdbh =
-                new AcontecimientoSQLiteHelper(getActivity(), Environment.getExternalStorageDirectory()+"/srevento.db", null, 1);
-
-        // creamos la variable de la base de datos
-        SQLiteDatabase db = usdbh.getReadableDatabase();
-
         // creamos un array de strings, en el cual introduciremos el campo que queremos recoger del where
         String[] args = new String[] {idEvento};
         // la sentencia SQL
         String selectSQL = "SELECT * FROM evento WHERE id=?";
         // creamos un cursor con la ejecución del select en la base de datos
 
-        Cursor c = db.rawQuery(selectSQL, args);
+        Cursor c = Methods.getInstance().getReadBBDD(getContext()).rawQuery(selectSQL, args);
         if (c.moveToFirst()) {
             nombre = c.getString(c.getColumnIndex("nombre")); //recogemos los datos de la columna 'nombre' de la base de datos
             descripcion = c.getString(c.getColumnIndex("descripcion"));
@@ -175,7 +168,7 @@ public class MostrarEventoFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        MyLog.d("MostrarEventoFragment", "onSaveInstanceState...");
+        MyLog.d(ACTIVITY, "onSaveInstanceState...");
         super.onSaveInstanceState(outState);
 
         // Guarda la selección de artículos actual en caso de que necesitemos recrear el fragmento

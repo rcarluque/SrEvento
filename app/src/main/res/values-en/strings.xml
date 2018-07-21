@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sr Evento</string>
+
+    <!-- Titulos de Actividades -->
+    <string name="title_activity_lista_acontecimientos">List of Occurences</string>
+    <string name="title_activity_mostrar_acontecimiento_scroll">Show Ocurrence</string>
+    <string name="title_activity_preferences">Settings</string>
+    <string name="title_activity_acerca_de">About us</string>
+    <string name="title_activity_anadir_acontecimiento">Add occurrence</string>
+
+    <string name="boton_mapa">Show in maps</string>
+    <string name="acerca_de">About us</string>
+
+    <!-- About us Strings -->
+    <string name="desarrollador">Developer: Rafael Carmona Luque</string>
+    <string name="licencias">Licenses</string>
+    <string name="texto_about_us">This application is developed to show the cultural diary. If you wish to contact the developer write an email to the following address: rcarluque@gmail.com</string>
+
+    <!-- Strings de Anadir Acontecimiento -->
+    <string name="texto_buscar_acontecimiento">Buscar por nombre del acontecimiento</string>
+    <string name="texto_et_buscar_acontecimiento">Nombre...</string>
+    <string name="button_buscar_acontecimiento">Buscar</string>
+
+    <!-- Alerts Strings -->
+    <string name="no_connection">No internet Connection</string>
+    <string name="campo_vacio">Can not search empty field</string>
+    <string name="internet_permission">Internet connection required</string>
+    <string name="no_existen_datos">No data in Database</string>
+    <string name="no_eventos_en_acontecimiento">This occurrence has not got events</string>
+    <string name="acontecimiento_sin_mapa">This occurrence has not position</string>
+
+    <!-- Preferences Values -->
+    <string name="settings">Configuration</string>
+
+    <string name="pref_descripcion_ultAcontecimiento">" Shows the last ocurrence visited when starting the application"</string>
+    <string name="pref_header_general">General</string>
+    <string name="pref_switch_title_ultAcontecimiento">Show last occurrence</string>
+
+    <string name="pref_idioma">Language</string>
+    <string-array name="pref_idioma_titulos">
+        <item>Spanish</item>
+        <item>English</item>
+    </string-array>
+
+    <string name="pref_alerta_titulo">Settings Change</string>
+    <string name="pref_alerta_content">You have changed settings and the App will restart. Are you sure you wish to continue?</string>
+
+</resources>

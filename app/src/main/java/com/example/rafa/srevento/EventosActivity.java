@@ -1,17 +1,16 @@
 package com.example.rafa.srevento;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.LinearLayout;
+import android.view.MenuItem;
 
 public class EventosActivity extends AppCompatActivity implements ListadoEventoFragment.OnFragmentInteractionListener {
-
+    private static final String ACTIVITY = "EventosActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MyLog.d("EventosActivity", "onCreate...");
+        MyLog.d(ACTIVITY, "onCreate...");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eventos);
 
@@ -37,10 +36,39 @@ public class EventosActivity extends AppCompatActivity implements ListadoEventoF
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.unique_fragment, listadoFrag).commit();
         }
+
+        // Método para crear la flecha hacia atrás en el toolbar
+        setupActionBar();
+    }
+
+    /**
+     * Creamos la flecha
+     */
+    private void setupActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            // Show the Up button in the action bar.
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    /**
+     * Este método está unido al de crear la flecha, aqui elegimos a que actividad queremos que se diriga.
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void onFragmentInteraction(int position, EventoItem item){
-        MyLog.d("EventosActivity", "onFragmentInteraction...");
+        MyLog.d(ACTIVITY, "onFragmentInteraction...");
         // Captura el fragmento de artículo del diseño de la actividad
         MostrarEventoFragment contenidoFrag = (MostrarEventoFragment)
                 getSupportFragmentManager().findFragmentById(R.id.contenido_fragment);

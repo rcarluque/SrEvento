@@ -1,6 +1,5 @@
 package com.example.rafa.srevento;
 
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -29,36 +28,18 @@ import java.net.URL;
  * Created by Rafa on 28/10/2016.
  */
 
-public class NuevoAcontecimientoAsyncTask extends AsyncTask<String,String,String> {
+public class GuardaAcontecimientoAsyncTask extends AsyncTask<String,String,String> {
+    private HttpURLConnection urlConnection;
+    private String id;
+    private Context context;
+    private ProgressBar pb;
+    private boolean realizar;
+    private String mensaje;
 
-    HttpURLConnection urlConnection;
-    String id;
-    Context context;
-    ProgressDialog dialog;
-    ProgressBar pb;
-    boolean realizar;
-    String mensaje;
-
-    public NuevoAcontecimientoAsyncTask(String id, Context context, ProgressBar pb) {
+    public GuardaAcontecimientoAsyncTask(Context context, String id, ProgressBar pb) {
         this.id = id;
         this.context = context;
         this.pb = pb;
-    }
-
-    public ProgressBar getPb() {
-        return pb;
-    }
-
-    public void setPb(ProgressBar pb) {
-        this.pb = pb;
-    }
-
-    public ProgressDialog getDialog() {
-        return dialog;
-    }
-
-    public void setDialog(ProgressDialog dialog) {
-        this.dialog = dialog;
     }
 
     public Context getContext() {
@@ -95,7 +76,7 @@ public class NuevoAcontecimientoAsyncTask extends AsyncTask<String,String,String
         StringBuilder resultado = new StringBuilder();
 
         try {
-            URL url = new URL("http://srevento.esy.es/api/v1/acontecimiento/"+id);
+            URL url = new URL(Constantes.REST_URL + id);
             urlConnection = (HttpURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 
@@ -109,19 +90,18 @@ public class NuevoAcontecimientoAsyncTask extends AsyncTask<String,String,String
             //Abrimos la base de datos en modo escritura
             // creamos un nuevo objeto tipo AcontecimientoSQLH, al cual le pasamos el context, y la ruta dónde guardar la base de datos en nuestro telefono
             AcontecimientoSQLiteHelper usdbh =
-                    new AcontecimientoSQLiteHelper(context, Environment.getExternalStorageDirectory()+"/srevento.db", null, 1);
+                    new AcontecimientoSQLiteHelper(context, Environment.getExternalStorageDirectory()+Constantes.DB_NAME, null, 1);
 
             SQLiteDatabase db = usdbh.getWritableDatabase();
 
             //Si hemos abierto correctamente la base de datos
             if(db != null) {
-
                 // Código para insertar datos en JSON desde array de resultado.
                 JSONObject raizJson = new JSONObject(resultado.toString());
                 if (raizJson.has("acontecimiento")) {
                     // Si encuentra en el Json el tag acontecimiento, igualaremos la funcion realizar a true pues si se puede realizar
                     realizar = true;
-                    MyLog.e("tag", "contiene acontecimiento");
+                    MyLog.e("doInBackground", "contiene acontecimiento");
 
                     JSONObject objetoJsonAcontecimiento = new JSONObject(raizJson.getString("acontecimiento"));
                     String idAcontecimiento = (objetoJsonAcontecimiento.has("id") ? objetoJsonAcontecimiento.getString("id") : "");
@@ -231,7 +211,6 @@ public class NuevoAcontecimientoAsyncTask extends AsyncTask<String,String,String
             urlConnection.disconnect();
         }
 
-
         return resultado.toString();
     }
 
@@ -249,9 +228,10 @@ public class NuevoAcontecimientoAsyncTask extends AsyncTask<String,String,String
             editor.putString("id", getId());
             editor.commit();
 
-            Intent intent = new Intent(context, MostrarAcontecimientoActivity.class);
+            // Finalizamos la actividad anterior y hacemos un intent de mostrar acontecimiento
+            ((BuscarAcontecimientoActivity)context).finish();
+            Intent intent = new Intent(context, MostrarAcontecimientoScrollActivity.class);
             context.startActivity(intent);
-            // Si no se ha podido realizar mostrará un Totas con mensaje de error
         } else{
             Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
         }
